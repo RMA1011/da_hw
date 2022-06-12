@@ -1,115 +1,92 @@
---схема БД: https://docs.google.com/document/d/1NVORWgdwlKepKq_b8SPRaSpraltxoMg2SIusTEN6mEQ/edit?usp=sharing
---colab/jupyter: https://colab.research.google.com/drive/1j4XdGIU__NYPVpv74vQa9HUOAkxsgUez?usp=sharing
+--СЃС…РµРјР° Р‘Р”: https://docs.google.com/document/d/1NVORWgdwlKepKq_b8SPRaSpraltxoMg2SIusTEN6mEQ/edit?usp=sharing
 
--- Задание 1: Вывести name, class по кораблям, выпущенным после 1920
-SELECT name, class 
-FROM Ships
-WHERE launched > 1920
+--task1
+--РљРѕСЂР°Р±Р»Рё: Р”Р»СЏ РєР°Р¶РґРѕРіРѕ РєР»Р°СЃСЃР° РѕРїСЂРµРґРµР»РёС‚Рµ С‡РёСЃР»Рѕ РєРѕСЂР°Р±Р»РµР№ СЌС‚РѕРіРѕ РєР»Р°СЃСЃР°, РїРѕС‚РѕРїР»РµРЅРЅС‹С… РІ СЃСЂР°Р¶РµРЅРёСЏС…. Р’С‹РІРµСЃС‚Рё: РєР»Р°СЃСЃ Рё С‡РёСЃР»Рѕ РїРѕС‚РѕРїР»РµРЅРЅС‹С… РєРѕСЂР°Р±Р»РµР№.
 
--- Задание 2: Вывести name, class по кораблям, выпущенным после 1920, но не позднее 1942
-select name, class
-from ships s 
-where launched > 1920 and launched <= 1942
-
--- Задание 3: Какое количество кораблей в каждом классе. Вывести количество и class
-
--- Вариант 1: мы считаем, что в каждом классе есть хотя бы один корабль. 
--- Тогда можем решить задачу без join - поле Class и сами корабли есть в Ships!
-select count(class), class 
-from ships s 
-group by class
--- Вариант 2: мы считаем, что могут быть классы с 0 кораблей. Тогда нужно отталкиваться от Classes
--- Спойлер: такой действительно есть, Bismarck!
-select count(ships.class), classes.class
-from classes left join ships
-on classes.class = ships.class
-group by classes.class
-
--- Задание 4: Для классов кораблей, калибр орудий которых не менее 16, укажите класс и страну. (таблица classes)
-select class, country
-from classes
-where bore >= 16
-
--- Задание 5: Укажите корабли, потопленные в сражениях в Северной Атлантике (таблица Outcomes, North Atlantic). Вывод: ship.
-select ship
-from outcomes
-where battle = 'North Atlantic' and result = 'sunk'
-
-
--- Задание 6: Вывести название (ship) последнего потопленного корабля
--- В лоб идти не получается: последние морские бои по дате закончились без потоплений.
--- Сначала надо получить дату, когда в боях потопили хотя бы один корабль, и только потом искать корабли
-
-select ship
-from outcomes join battles
-on outcomes.battle = battles.name
-where result = 'sunk' and date = 
-(select max(date) 
-from battles join outcomes 
-on battles.name = outcomes.battle
-where result = 'sunk')
-
--- ответ: Fuso, Yamashiro
-
-
--- Задание 7: Вывести название корабля (ship) и класс (class) последнего потопленного корабля
-
-select ship, class 
-from Ships join outcomes
-on ships.name = outcomes.ship 
-where ship in
-(select ship
-from outcomes join battles
-on outcomes.battle = battles.name
-where result = 'sunk' and date = 
-(select max(date) 
-from battles join outcomes 
-on battles.name = outcomes.battle
-where result = 'sunk'))
-
--- ответ: н/д, потому что Fuso и Yamashiro нет в Ships
-
--- Задание 8: Вывести все потопленные корабли, у которых калибр орудий не менее 16, и которые потоплены. Вывод: ship, class
--- Важная оговорка: мы должны быть ОК с использованием ships.name вместо ship
--- Потому что если ships.name != ship, то мы не получим данные по калибру
-
-select name, ships.class
-from classes join ships
-on classes.class = ships.class
-where bore >= 16 and name in 
-(select ship 
-from outcomes 
-where result = 'sunk')
-
--- Если нам принципиально использовать ship, то нужно идти от left join outcomes
-
-select ship, ships.class
-from outcomes left join ships
+select class, count(ship)
+from outcomes full join ships
 on outcomes.ship = ships.name
-left join classes
-on ships.class = classes.class
-where (bore >= 16 and result = 'sunk') or result = 'sunk'
+where result = 'sunk' or result is NULL
+group by class
+
+-- РёР»Рё С‡РµСЂРµР· all, РЅРѕ С‚РѕРіРґР° СЃС‚СЂРѕРіРѕ РЅРµРЅСѓР»РµРІС‹Рµ Р·РЅР°С‡РµРЅРёСЏ
+
+select class, count(name)
+from ships
+where name in (select ship from outcomes where result = 'sunk' or result is NULL)
+group by class
 
 
--- Задание 9: Вывести все классы кораблей, выпущенные США (таблица classes, country = 'USA'). Вывод: class
-select class
-from classes
-where country = 'USA'
+--task2
+--РљРѕСЂР°Р±Р»Рё: Р”Р»СЏ РєР°Р¶РґРѕРіРѕ РєР»Р°СЃСЃР° РѕРїСЂРµРґРµР»РёС‚Рµ РіРѕРґ, РєРѕРіРґР° Р±С‹Р» СЃРїСѓС‰РµРЅ РЅР° РІРѕРґСѓ РїРµСЂРІС‹Р№ РєРѕСЂР°Р±Р»СЊ СЌС‚РѕРіРѕ РєР»Р°СЃСЃР°. Р•СЃР»Рё РіРѕРґ СЃРїСѓСЃРєР° РЅР° РІРѕРґСѓ РіРѕР»РѕРІРЅРѕРіРѕ РєРѕСЂР°Р±Р»СЏ РЅРµРёР·РІРµСЃС‚РµРЅ, РѕРїСЂРµРґРµР»РёС‚Рµ РјРёРЅРёРјР°Р»СЊРЅС‹Р№ РіРѕРґ СЃРїСѓСЃРєР° РЅР° РІРѕРґСѓ РєРѕСЂР°Р±Р»РµР№ СЌС‚РѕРіРѕ РєР»Р°СЃСЃР°. Р’С‹РІРµСЃС‚Рё: РєР»Р°СЃСЃ, РіРѕРґ.
+select class, min(launched)
+from ships
+group by class
 
--- ответ: Iowa, North Carolina, Tennessee
+--task3
+--РљРѕСЂР°Р±Р»Рё: Р”Р»СЏ РєР»Р°СЃСЃРѕРІ, РёРјРµСЋС‰РёС… РїРѕС‚РµСЂРё РІ РІРёРґРµ РїРѕС‚РѕРїР»РµРЅРЅС‹С… РєРѕСЂР°Р±Р»РµР№ Рё РЅРµ РјРµРЅРµРµ 3 РєРѕСЂР°Р±Р»РµР№ РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С…, РІС‹РІРµСЃС‚Рё РёРјСЏ РєР»Р°СЃСЃР° Рё С‡РёСЃР»Рѕ РїРѕС‚РѕРїР»РµРЅРЅС‹С… РєРѕСЂР°Р±Р»РµР№.
 
--- Задание 10: Вывести все корабли, выпущенные США (таблица classes & ships, country = 'USA'). Вывод: name, class
-select name, Ships.class
-from Classes join ships
-on classes.class = ships.class
-where country = 'USA'
+SELECT class, count(ships)
+FROM outcomes left join ships
+on outcomes.ship = ships.name
+where result = 'sunk' and class not in
+(select count(ships) from outcomes left join class
+on outcomes.ship = ships.name where result = 'sunk')
 
--- Задание 20 (с занятия): Найдите средний размер hd PC каждого из тех производителей, которые выпускают и принтеры. Вывести: maker, средний размер HD.
-select maker, avg(hd) 
-from PC join product 
-on pc.model = product.model 
-where maker in 
-(select maker 
-from printer join product 
-on printer.model = product.model) 
-group by maker
+--task4
+--РљРѕСЂР°Р±Р»Рё: РќР°Р№РґРёС‚Рµ РЅР°Р·РІР°РЅРёСЏ РєРѕСЂР°Р±Р»РµР№, РёРјРµСЋС‰РёС… РЅР°РёР±РѕР»СЊС€РµРµ С‡РёСЃР»Рѕ РѕСЂСѓРґРёР№ СЃСЂРµРґРё РІСЃРµС… РєРѕСЂР°Р±Р»РµР№ С‚Р°РєРѕРіРѕ Р¶Рµ РІРѕРґРѕРёР·РјРµС‰РµРЅРёСЏ (СѓС‡РµСЃС‚СЊ РєРѕСЂР°Р±Р»Рё РёР· С‚Р°Р±Р»РёС†С‹ Outcomes).
+
+with total_ships_info as (SELECT * 
+FROM outcomes left join ships
+on outcomes.ship = ships.name left join classes 
+on ships.class = classes.class)
+select distinct(ship)
+from total_ships_info left join (select displacement, max(numGuns) max_guns from Classes group by displacement) as displacement_info
+on displacement_info.displacement = total_ships_info.displacement
+where numGuns = max_guns
+
+
+
+
+--task5
+--РљРѕРјРїСЊСЋС‚РµСЂРЅР°СЏ С„РёСЂРјР°: РќР°Р№РґРёС‚Рµ РїСЂРѕРёР·РІРѕРґРёС‚РµР»РµР№ РїСЂРёРЅС‚РµСЂРѕРІ, РєРѕС‚РѕСЂС‹Рµ РїСЂРѕРёР·РІРѕРґСЏС‚ РџРљ СЃ РЅР°РёРјРµРЅСЊС€РёРј РѕР±СЉРµРјРѕРј RAM Рё СЃ СЃР°РјС‹Рј Р±С‹СЃС‚СЂС‹Рј РїСЂРѕС†РµСЃСЃРѕСЂРѕРј СЃСЂРµРґРё РІСЃРµС… РџРљ, 
+--РёРјРµСЋС‰РёС… РЅР°РёРјРµРЅСЊС€РёР№ РѕР±СЉРµРј RAM. Р’С‹РІРµСЃС‚Рё: Maker
+
+with weakest_pc as (select * from pc where ram = (select min(ram) from pc))
+select distinct(maker)
+from product
+where model in (select model from weakest_pc where speed = (select max(speed) from weakest_pc)) 
+and maker in (select distinct(maker) from printer join product on product.model = printer.model)
+
+-- РћСЃС‚Р°С‚РєРё РєР»Р°СЃСЃРЅРѕР№ СЂР°Р±РѕС‚С‹
+
+--task11
+--РљРѕСЂР°Р±Р»Рё: Р’С‹РІРµСЃС‚Рё СЃРїРёСЃРѕРє РІСЃРµС… РєРѕСЂР°Р±Р»РµР№ Рё РєР»Р°СЃСЃ. Р”Р»СЏ С‚РµС… Сѓ РєРѕРіРѕ РЅРµС‚ РєР»Р°СЃСЃР° - РІС‹РІРµСЃС‚Рё 0, РґР»СЏ РѕСЃС‚Р°Р»СЊРЅС‹С… - class
+
+select case
+	when ships.name is null
+		and outcomes.ship is not null then outcomes.ship
+	when outcomes.ship is null
+		and ships.name is not null then ships.name
+	when ships.name is not null
+		and outcomes.ship is not null then ships.name
+	else null
+end full_name,
+case
+when class is null
+then '0'
+else class
+end new_class
+from outcomes full join ships
+on outcomes.ship = ships.name
+
+--task16
+--РљРѕСЂР°Р±Р»Рё: РЈРєР°Р¶РёС‚Рµ СЃСЂР°Р¶РµРЅРёСЏ, РєРѕС‚РѕСЂС‹Рµ РїСЂРѕРёР·РѕС€Р»Рё РІ РіРѕРґС‹, РЅРµ СЃРѕРІРїР°РґР°СЋС‰РёРµ РЅРё СЃ РѕРґРЅРёРј РёР· РіРѕРґРѕРІ СЃРїСѓСЃРєР° РєРѕСЂР°Р±Р»РµР№ РЅР° РІРѕРґСѓ. (С‡РµСЂРµР· with)
+
+with launch_year as (select launched from ships)
+select name from battles
+where date_part('year', date) not in (select launched from launch_year)
+
+-- Р•СЃР»Рё РїСЂР°РІРёР»СЊРЅРѕ РїРѕРЅСЏР» Р·Р°РґР°РЅРёРµ, С‚Рѕ with РЅР° СЃР°РјРѕРј РґРµР»Рµ РЅРµ РЅСѓР¶РµРЅ
+select name from battles
+where date_part('year', date) not in (select launched from ships)
