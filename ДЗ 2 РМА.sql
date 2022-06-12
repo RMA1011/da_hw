@@ -1,92 +1,185 @@
---ÒıÂÏ‡ ¡ƒ: https://docs.google.com/document/d/1NVORWgdwlKepKq_b8SPRaSpraltxoMg2SIusTEN6mEQ/edit?usp=sharing
+--—Å—Ö–µ–º–∞ –ë–î: https://docs.google.com/document/d/1NVORWgdwlKepKq_b8SPRaSpraltxoMg2SIusTEN6mEQ/edit?usp=sharing
+--colab/jupyter: https://colab.research.google.com/drive/1j4XdGIU__NYPVpv74vQa9HUOAkxsgUez?usp=sharing
 
---task1
--- Ó‡·ÎË: ƒÎˇ Í‡Ê‰Ó„Ó ÍÎ‡ÒÒ‡ ÓÔÂ‰ÂÎËÚÂ ˜ËÒÎÓ ÍÓ‡·ÎÂÈ ˝ÚÓ„Ó ÍÎ‡ÒÒ‡, ÔÓÚÓÔÎÂÌÌ˚ı ‚ Ò‡ÊÂÌËˇı. ¬˚‚ÂÒÚË: ÍÎ‡ÒÒ Ë ˜ËÒÎÓ ÔÓÚÓÔÎÂÌÌ˚ı ÍÓ‡·ÎÂÈ.
+--task13 (lesson3)
+--–ö–æ–º–ø—å—é—Ç–µ—Ä–Ω–∞—è —Ñ–∏—Ä–º–∞: –í—ã–≤–µ—Å—Ç–∏ —Å–ø–∏—Å–æ–∫ –≤—Å–µ—Ö –ø—Ä–æ–¥—É–∫—Ç–æ–≤ –∏ –ø—Ä–æ–∏–∑–≤–æ–¥–∏—Ç–µ–ª—è —Å —É–∫–∞–∑–∞–Ω–∏–µ–º —Ç–∏–ø–∞ –ø—Ä–æ–¥—É–∫—Ç–∞ (pc, printer, laptop). –í—ã–≤–µ—Å—Ç–∏: model, maker, type
 
-select class, count(ship)
-from outcomes full join ships
-on outcomes.ship = ships.name
-where result = 'sunk' or result is NULL
-group by class
+with all_models as 
+(select model from pc union select model from printer union select model from laptop)
+select product.model as model, maker, type
+from product join all_models
+on product.model = all_models.model
 
--- ËÎË ˜ÂÂÁ all, ÌÓ ÚÓ„‰‡ ÒÚÓ„Ó ÌÂÌÛÎÂ‚˚Â ÁÌ‡˜ÂÌËˇ
+--task14 (lesson3)
+--–ö–æ–º–ø—å—é—Ç–µ—Ä–Ω–∞—è —Ñ–∏—Ä–º–∞: –ü—Ä–∏ –≤—ã–≤–æ–¥–µ –≤—Å–µ—Ö –∑–Ω–∞—á–µ–Ω–∏–π –∏–∑ —Ç–∞–±–ª–∏—Ü—ã printer –¥–æ–ø–æ–ª–Ω–∏—Ç–µ–ª—å–Ω–æ –≤—ã–≤–µ—Å—Ç–∏ –¥–ª—è —Ç–µ—Ö, —É –∫–æ–≥–æ —Ü–µ–Ω–∞ –≤—ã—à–µ–π —Å—Ä–µ–¥–Ω–µ–π PC - "1", —É –æ—Å—Ç–∞–ª—å–Ω—ã—Ö - "0"
 
-select class, count(name)
-from ships
-where name in (select ship from outcomes where result = 'sunk' or result is NULL)
-group by class
-
-
---task2
--- Ó‡·ÎË: ƒÎˇ Í‡Ê‰Ó„Ó ÍÎ‡ÒÒ‡ ÓÔÂ‰ÂÎËÚÂ „Ó‰, ÍÓ„‰‡ ·˚Î ÒÔÛ˘ÂÌ Ì‡ ‚Ó‰Û ÔÂ‚˚È ÍÓ‡·Î¸ ˝ÚÓ„Ó ÍÎ‡ÒÒ‡. ≈ÒÎË „Ó‰ ÒÔÛÒÍ‡ Ì‡ ‚Ó‰Û „ÓÎÓ‚ÌÓ„Ó ÍÓ‡·Îˇ ÌÂËÁ‚ÂÒÚÂÌ, ÓÔÂ‰ÂÎËÚÂ ÏËÌËÏ‡Î¸Ì˚È „Ó‰ ÒÔÛÒÍ‡ Ì‡ ‚Ó‰Û ÍÓ‡·ÎÂÈ ˝ÚÓ„Ó ÍÎ‡ÒÒ‡. ¬˚‚ÂÒÚË: ÍÎ‡ÒÒ, „Ó‰.
-select class, min(launched)
-from ships
-group by class
-
---task3
--- Ó‡·ÎË: ƒÎˇ ÍÎ‡ÒÒÓ‚, ËÏÂ˛˘Ëı ÔÓÚÂË ‚ ‚Ë‰Â ÔÓÚÓÔÎÂÌÌ˚ı ÍÓ‡·ÎÂÈ Ë ÌÂ ÏÂÌÂÂ 3 ÍÓ‡·ÎÂÈ ‚ ·‡ÁÂ ‰‡ÌÌ˚ı, ‚˚‚ÂÒÚË ËÏˇ ÍÎ‡ÒÒ‡ Ë ˜ËÒÎÓ ÔÓÚÓÔÎÂÌÌ˚ı ÍÓ‡·ÎÂÈ.
-
-SELECT class, count(ships)
-FROM outcomes left join ships
-on outcomes.ship = ships.name
-where result = 'sunk' and class not in
-(select count(ships) from outcomes left join class
-on outcomes.ship = ships.name where result = 'sunk')
-
---task4
--- Ó‡·ÎË: Õ‡È‰ËÚÂ Ì‡Á‚‡ÌËˇ ÍÓ‡·ÎÂÈ, ËÏÂ˛˘Ëı Ì‡Ë·ÓÎ¸¯ÂÂ ˜ËÒÎÓ ÓÛ‰ËÈ ÒÂ‰Ë ‚ÒÂı ÍÓ‡·ÎÂÈ Ú‡ÍÓ„Ó ÊÂ ‚Ó‰ÓËÁÏÂ˘ÂÌËˇ (Û˜ÂÒÚ¸ ÍÓ‡·ÎË ËÁ Ú‡·ÎËˆ˚ Outcomes).
-
-with total_ships_info as (SELECT * 
-FROM outcomes left join ships
-on outcomes.ship = ships.name left join classes 
-on ships.class = classes.class)
-select distinct(ship)
-from total_ships_info left join (select displacement, max(numGuns) max_guns from Classes group by displacement) as displacement_info
-on displacement_info.displacement = total_ships_info.displacement
-where numGuns = max_guns
+with comparison as (select model, case when price > (select avg(price) from pc) then 1 else 0 end flag from printer)
+select * from printer join comparison on printer.model = comparison.model
 
 
+--task15 (lesson3)
+--–ö–æ—Ä–∞–±–ª–∏: –í—ã–≤–µ—Å—Ç–∏ —Å–ø–∏—Å–æ–∫ –∫–æ—Ä–∞–±–ª–µ–π, —É –∫–æ—Ç–æ—Ä—ã—Ö class –æ—Ç—Å—É—Ç—Å—Ç–≤—É–µ—Ç (IS NULL)
 
+with all_ships_possible as (select name from ships union select ship as name from outcomes)
+select all_ships_possible.name from all_ships_possible left join ships on all_ships_possible.name = ships.name
+where class is null
 
---task5
--- ÓÏÔ¸˛ÚÂÌ‡ˇ ÙËÏ‡: Õ‡È‰ËÚÂ ÔÓËÁ‚Ó‰ËÚÂÎÂÈ ÔËÌÚÂÓ‚, ÍÓÚÓ˚Â ÔÓËÁ‚Ó‰ˇÚ œ  Ò Ì‡ËÏÂÌ¸¯ËÏ Ó·˙ÂÏÓÏ RAM Ë Ò Ò‡Ï˚Ï ·˚ÒÚ˚Ï ÔÓˆÂÒÒÓÓÏ ÒÂ‰Ë ‚ÒÂı œ , 
---ËÏÂ˛˘Ëı Ì‡ËÏÂÌ¸¯ËÈ Ó·˙ÂÏ RAM. ¬˚‚ÂÒÚË: Maker
+--task16 (lesson3)
+--–ö–æ—Ä–∞–±–ª–∏: –£–∫–∞–∂–∏—Ç–µ —Å—Ä–∞–∂–µ–Ω–∏—è, –∫–æ—Ç–æ—Ä—ã–µ –ø—Ä–æ–∏–∑–æ—à–ª–∏ –≤ –≥–æ–¥—ã, –Ω–µ —Å–æ–≤–ø–∞–¥–∞—é—â–∏–µ –Ω–∏ —Å –æ–¥–Ω–∏–º –∏–∑ –≥–æ–¥–æ–≤ —Å–ø—É—Å–∫–∞ –∫–æ—Ä–∞–±–ª–µ–π –Ω–∞ –≤–æ–¥—É.
 
-with weakest_pc as (select * from pc where ram = (select min(ram) from pc))
-select distinct(maker)
-from product
-where model in (select model from weakest_pc where speed = (select max(speed) from weakest_pc)) 
-and maker in (select distinct(maker) from printer join product on product.model = printer.model)
-
--- ŒÒÚ‡ÚÍË ÍÎ‡ÒÒÌÓÈ ‡·ÓÚ˚
-
---task11
--- Ó‡·ÎË: ¬˚‚ÂÒÚË ÒÔËÒÓÍ ‚ÒÂı ÍÓ‡·ÎÂÈ Ë ÍÎ‡ÒÒ. ƒÎˇ ÚÂı Û ÍÓ„Ó ÌÂÚ ÍÎ‡ÒÒ‡ - ‚˚‚ÂÒÚË 0, ‰Îˇ ÓÒÚ‡Î¸Ì˚ı - class
-
-select case
-	when ships.name is null
-		and outcomes.ship is not null then outcomes.ship
-	when outcomes.ship is null
-		and ships.name is not null then ships.name
-	when ships.name is not null
-		and outcomes.ship is not null then ships.name
-	else null
-end full_name,
-case
-when class is null
-then '0'
-else class
-end new_class
-from outcomes full join ships
-on outcomes.ship = ships.name
-
---task16
--- Ó‡·ÎË: ”Í‡ÊËÚÂ Ò‡ÊÂÌËˇ, ÍÓÚÓ˚Â ÔÓËÁÓ¯ÎË ‚ „Ó‰˚, ÌÂ ÒÓ‚Ô‡‰‡˛˘ËÂ ÌË Ò Ó‰ÌËÏ ËÁ „Ó‰Ó‚ ÒÔÛÒÍ‡ ÍÓ‡·ÎÂÈ Ì‡ ‚Ó‰Û. (˜ÂÂÁ with)
-
-with launch_year as (select launched from ships)
-select name from battles
-where date_part('year', date) not in (select launched from launch_year)
-
--- ≈ÒÎË Ô‡‚ËÎ¸ÌÓ ÔÓÌˇÎ Á‡‰‡ÌËÂ, ÚÓ with Ì‡ Ò‡ÏÓÏ ‰ÂÎÂ ÌÂ ÌÛÊÂÌ
-select name from battles
+select distinct(name) from battles
 where date_part('year', date) not in (select launched from ships)
+
+--task17 (lesson3)
+--–ö–æ—Ä–∞–±–ª–∏: –ù–∞–π–¥–∏—Ç–µ —Å—Ä–∞–∂–µ–Ω–∏—è, –≤ –∫–æ—Ç–æ—Ä—ã—Ö —É—á–∞—Å—Ç–≤–æ–≤–∞–ª–∏ –∫–æ—Ä–∞–±–ª–∏ –∫–ª–∞—Å—Å–∞ Kongo –∏–∑ —Ç–∞–±–ª–∏—Ü—ã Ships.
+
+select battle
+from outcomes join ships
+on outcomes.ship = ships.name
+
+--task1  (lesson4)
+-- –ö–æ–º–ø—å—é—Ç–µ—Ä–Ω–∞—è —Ñ–∏—Ä–º–∞: –°–¥–µ–ª–∞—Ç—å view (–Ω–∞–∑–≤–∞–Ω–∏–µ all_products_flag_300) –¥–ª—è –≤—Å–µ—Ö —Ç–æ–≤–∞—Ä–æ–≤ (pc, printer, laptop) —Å —Ñ–ª–∞–≥–æ–º, –µ—Å–ª–∏ —Å—Ç–æ–∏–º–æ—Å—Ç—å –±–æ–ª—å—à–µ > 300. –í–æ view —Ç—Ä–∏ –∫–æ–ª–æ–Ω–∫–∏: model, price, flag
+
+create view all_products_flag_300 as 
+(with all_models_possible as 
+(select model, price from pc union
+select model, price from laptop union
+select model, price from printer)
+select model, price, case when price > 300 then 1 else 0 end flag from all_models_possible);
+
+select * from all_products_flag_300
+
+--task2  (lesson4)
+-- –ö–æ–º–ø—å—é—Ç–µ—Ä–Ω–∞—è —Ñ–∏—Ä–º–∞: –°–¥–µ–ª–∞—Ç—å view (–Ω–∞–∑–≤–∞–Ω–∏–µ all_products_flag_avg_price) –¥–ª—è –≤—Å–µ—Ö —Ç–æ–≤–∞—Ä–æ–≤ (pc, printer, laptop) —Å —Ñ–ª–∞–≥–æ–º, –µ—Å–ª–∏ —Å—Ç–æ–∏–º–æ—Å—Ç—å –±–æ–ª—å—à–µ c—Ä–µ–¥–Ω–µ–π . –í–æ view —Ç—Ä–∏ –∫–æ–ª–æ–Ω–∫–∏: model, price, flag
+
+create view all_products_flag_avg_price as 
+(with all_models_possible as 
+(select model, price from pc union
+select model, price from laptop union
+select model, price from printer)
+select model, price, case when price > (select avg(price) from all_models_possible) then 1 else 0 end flag from all_models_possible);
+
+select * from all_products_flag_avg_price
+
+--task3  (lesson4)
+-- –ö–æ–º–ø—å—é—Ç–µ—Ä–Ω–∞—è —Ñ–∏—Ä–º–∞: –í—ã–≤–µ—Å—Ç–∏ –≤—Å–µ –ø—Ä–∏–Ω—Ç–µ—Ä—ã –ø—Ä–æ–∏–∑–≤–æ–¥–∏—Ç–µ–ª—è = 'A' —Å–æ —Å—Ç–æ–∏–º–æ—Å—Ç—å—é –≤—ã—à–µ —Å—Ä–µ–¥–Ω–µ–π –ø–æ –ø—Ä–∏–Ω—Ç–µ—Ä–∞–º –ø—Ä–æ–∏–∑–≤–æ–¥–∏—Ç–µ–ª—è = 'D' –∏ 'C'. –í—ã–≤–µ—Å—Ç–∏ model
+
+with all_printers as
+(select printer.model as model, price, maker from printer join product
+on printer.model = product.model)
+select model from all_printers
+where maker = 'A' and price > (select avg(price) from all_printers where maker = 'D' or maker = 'C')
+
+--task4 (lesson4)
+-- –ö–æ–º–ø—å—é—Ç–µ—Ä–Ω–∞—è —Ñ–∏—Ä–º–∞: –í—ã–≤–µ—Å—Ç–∏ –≤—Å–µ —Ç–æ–≤–∞—Ä—ã –ø—Ä–æ–∏–∑–≤–æ–¥–∏—Ç–µ–ª—è = 'A' —Å–æ —Å—Ç–æ–∏–º–æ—Å—Ç—å—é –≤—ã—à–µ —Å—Ä–µ–¥–Ω–µ–π –ø–æ –ø—Ä–∏–Ω—Ç–µ—Ä–∞–º –ø—Ä–æ–∏–∑–≤–æ–¥–∏—Ç–µ–ª—è = 'D' –∏ 'C'. –í—ã–≤–µ—Å—Ç–∏ model
+with marked_products as 
+(select product.model as model, maker, type, price from
+(select price, model from laptop union
+select price, model from pc union
+select price, model from printer) all_products join product on all_products.model = product.model)
+select model from marked_products
+where maker = 'A' and price > (select avg(price) from marked_products where (maker = 'D' or maker = 'C') and type = 'Printer')
+
+
+--task5 (lesson4)
+-- –ö–æ–º–ø—å—é—Ç–µ—Ä–Ω–∞—è —Ñ–∏—Ä–º–∞: –ö–∞–∫–∞—è —Å—Ä–µ–¥–Ω—è—è —Ü–µ–Ω–∞ —Å—Ä–µ–¥–∏ —É–Ω–∏–∫–∞–ª—å–Ω—ã—Ö –ø—Ä–æ–¥—É–∫—Ç–æ–≤ –ø—Ä–æ–∏–∑–≤–æ–¥–∏—Ç–µ–ª—è = 'A' (printer & laptop & pc)
+with marked_products as 
+(select product.model as model, maker, price from
+(select price, model from laptop union
+select price, model from pc union
+select price, model from printer) all_products join product on all_products.model = product.model)
+select avg(price) from marked_products
+where maker = 'A'
+
+
+--task6 (lesson4)
+-- –ö–æ–º–ø—å—é—Ç–µ—Ä–Ω–∞—è —Ñ–∏—Ä–º–∞: –°–¥–µ–ª–∞—Ç—å view —Å –∫–æ–ª–∏—á–µ—Å—Ç–≤–æ–º —Ç–æ–≤–∞—Ä–æ–≤ (–Ω–∞–∑–≤–∞–Ω–∏–µ count_products_by_makers) –ø–æ –∫–∞–∂–¥–æ–º—É –ø—Ä–æ–∏–∑–≤–æ–¥–∏—Ç–µ–ª—é. –í–æ view: maker, count
+
+create view count_products_by_makers as 
+(with marked_products as 
+(select product.model as model, maker, type, price from
+(select price, model from laptop union
+select price, model from pc union
+select price, model from printer) all_products join product on all_products.model = product.model)
+select maker, count(*)
+from marked_products
+group by maker);
+
+select * from count_products_by_makers
+
+--task7 (lesson4)
+-- –ü–æ –ø—Ä–µ–¥—ã–¥—É—â–µ–º—É view (count_products_by_makers) —Å–¥–µ–ª–∞—Ç—å –≥—Ä–∞—Ñ–∏–∫ –≤ colab (X: maker, y: count)
+-- https://colab.research.google.com/drive/1jm7OnNeKy8TgKLjNndV157BGJ37FDh0C#scrollTo=vKnaTHGjzwTv
+
+
+--task8 (lesson4)
+-- –ö–æ–º–ø—å—é—Ç–µ—Ä–Ω–∞—è —Ñ–∏—Ä–º–∞: –°–¥–µ–ª–∞—Ç—å –∫–æ–ø–∏—é —Ç–∞–±–ª–∏—Ü—ã printer (–Ω–∞–∑–≤–∞–Ω–∏–µ printer_updated) –∏ —É–¥–∞–ª–∏—Ç—å –∏–∑ –Ω–µ–µ –≤—Å–µ –ø—Ä–∏–Ω—Ç–µ—Ä—ã –ø—Ä–æ–∏–∑–≤–æ–¥–∏—Ç–µ–ª—è 'D'
+
+-- –û–ø—Ü–∏—è —á–µ—Ä–µ–∑ —Ñ–∏–ª—å—Ç—Ä
+create table printer_updated as 
+(select * from printer where model not in (select model from product where maker = 'D'));
+
+select * from printer_updated
+
+--task9 (lesson4)
+-- –ö–æ–º–ø—å—é—Ç–µ—Ä–Ω–∞—è —Ñ–∏—Ä–º–∞: –°–¥–µ–ª–∞—Ç—å –Ω–∞ –±–∞–∑–µ —Ç–∞–±–ª–∏—Ü—ã (printer_updated) view —Å –¥–æ–ø–æ–ª–Ω–∏—Ç–µ–ª—å–Ω–æ–π –∫–æ–ª–æ–Ω–∫–æ–π –ø—Ä–æ–∏–∑–≤–æ–¥–∏—Ç–µ–ª—è (–Ω–∞–∑–≤–∞–Ω–∏–µ printer_updated_with_makers)
+
+drop view printer_updated_with_makers;
+
+create view printer_updated_with_makers as
+(select code, printer_updated.model as model, color, type, price, maker from printer_updated join (select model, maker from product) as modeling on printer_updated.model = modeling.model);
+
+select * from printer_updated_with_makers 
+
+--task10 (lesson4)
+-- –ö–æ—Ä–∞–±–ª–∏: –°–¥–µ–ª–∞—Ç—å view c –∫–æ–ª–∏—á–µ—Å—Ç–≤–æ–º –ø–æ—Ç–æ–ø–ª–µ–Ω–Ω—ã—Ö –∫–æ—Ä–∞–±–ª–µ–π –∏ –∫–ª–∞—Å—Å–æ–º –∫–æ—Ä–∞–±–ª—è (–Ω–∞–∑–≤–∞–Ω–∏–µ sunk_ships_by_classes). –í–æ view: count, class (–µ—Å–ª–∏ –∑–Ω–∞—á–µ–Ω–∏—è –∫–ª–∞—Å—Å–∞ –Ω–µ—Ç/IS NULL, —Ç–æ –∑–∞–º–µ–Ω–∏—Ç—å –Ω–∞ 0)
+
+drop view sunk_ships_by_classes;
+
+create view sunk_ships_by_classes as
+(select count(ship), case when class is null then '0' else ships.class end "class"
+from outcomes left join ships on outcomes.ship = ships.name
+where result = 'sunk' 
+group by class);
+
+select * from sunk_ships_by_classes;
+
+--task11 (lesson4)
+-- –ö–æ—Ä–∞–±–ª–∏: –ü–æ –ø—Ä–µ–¥—ã–¥—É—â–µ–º—É view (sunk_ships_by_classes) —Å–¥–µ–ª–∞—Ç—å –≥—Ä–∞—Ñ–∏–∫ –≤ colab (X: class, Y: count)
+-- https://colab.research.google.com/drive/1jm7OnNeKy8TgKLjNndV157BGJ37FDh0C#scrollTo=7FdYUEgT0pRr
+
+--task12 (lesson4)
+-- –ö–æ—Ä–∞–±–ª–∏: –°–¥–µ–ª–∞—Ç—å –∫–æ–ø–∏—é —Ç–∞–±–ª–∏—Ü—ã classes (–Ω–∞–∑–≤–∞–Ω–∏–µ classes_with_flag) –∏ –¥–æ–±–∞–≤–∏—Ç—å –≤ –Ω–µ–µ flag: –µ—Å–ª–∏ –∫–æ–ª–∏—á–µ—Å—Ç–≤–æ –æ—Ä—É–¥–∏–π –±–æ–ª—å—à–µ –∏–ª–∏ —Ä–∞–≤–Ω–æ 9 - —Ç–æ 1, –∏–Ω–∞—á–µ 0
+
+drop table classes_with_flag; 
+
+create table classes_with_flag as
+(select *, case when numGuns >= 9 then 1 else 0 end flag from classes);
+
+select * from classes_with_flag;
+
+--task13 (lesson4)
+-- –ö–æ—Ä–∞–±–ª–∏: –°–¥–µ–ª–∞—Ç—å –≥—Ä–∞—Ñ–∏–∫ –≤ colab –ø–æ —Ç–∞–±–ª–∏—Ü–µ classes —Å –∫–æ–ª–∏—á–µ—Å—Ç–≤–æ–º –∫–ª–∞—Å—Å–æ–≤ –ø–æ —Å—Ç—Ä–∞–Ω–∞–º (X: country, Y: count)
+select country, count(class) from classes
+group by country
+
+-- https://colab.research.google.com/drive/1jm7OnNeKy8TgKLjNndV157BGJ37FDh0C#scrollTo=7FdYUEgT0pRr
+
+--task14 (lesson4)
+-- –ö–æ—Ä–∞–±–ª–∏: –í–µ—Ä–Ω—É—Ç—å –∫–æ–ª–∏—á–µ—Å—Ç–≤–æ –∫–æ—Ä–∞–±–ª–µ–π, —É –∫–æ—Ç–æ—Ä—ã—Ö –Ω–∞–∑–≤–∞–Ω–∏–µ –Ω–∞—á–∏–Ω–∞–µ—Ç—Å—è —Å –±—É–∫–≤—ã "O" –∏–ª–∏ "M".
+select count(name)
+from ships
+where name like 'O%' or name like 'M%'
+
+--task15 (lesson4)
+-- –ö–æ—Ä–∞–±–ª–∏: –í–µ—Ä–Ω—É—Ç—å –∫–æ–ª–∏—á–µ—Å—Ç–≤–æ –∫–æ—Ä–∞–±–ª–µ–π, —É –∫–æ—Ç–æ—Ä—ã—Ö –Ω–∞–∑–≤–∞–Ω–∏–µ —Å–æ—Å—Ç–æ–∏—Ç –∏–∑ –¥–≤—É—Ö —Å–ª–æ–≤.
+select count(name)
+from ships
+where name like '% %'
+
+--task16 (lesson4)
+-- –ö–æ—Ä–∞–±–ª–∏: –ü–æ—Å—Ç—Ä–æ–∏—Ç—å –≥—Ä–∞—Ñ–∏–∫ —Å –∫–æ–ª–∏—á–µ—Å—Ç–≤–æ–º –∑–∞–ø—É—â–µ–Ω–Ω—ã—Ö –Ω–∞ –≤–æ–¥—É –∫–æ—Ä–∞–±–ª–µ–π –∏ –≥–æ–¥–æ–º –∑–∞–ø—É—Å–∫–∞ (X: year, Y: count)
+select count(name) as "count", launched as "year" from ships
+group by launched
+
+--https://colab.research.google.com/drive/1jm7OnNeKy8TgKLjNndV157BGJ37FDh0C#scrollTo=7FdYUEgT0pRr
